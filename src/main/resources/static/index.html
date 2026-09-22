@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>FABRICORE | Operations Center</title>
+    
+    <!-- TailWind CSS & Modern Typography -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#572000",
+              "on-surface-variant": "#e2bfb0",
+              "on-secondary-fixed-variant": "#38485d",
+              "on-tertiary-fixed-variant": "#004c6e",
+              "secondary-fixed-dim": "#b7c8e1",
+              "surface-container": "#201f1f",
+              "surface-container-high": "#2a2a2a",
+              "surface": "#131313",
+              "secondary-fixed": "#d3e4fe",
+              "surface-bright": "#393939",
+              "on-error": "#690005",
+              "tertiary-fixed": "#c9e6ff",
+              "outline": "#a98a7d",
+              "surface-dim": "#131313",
+              "inverse-on-surface": "#313030",
+              "on-surface": "#e5e2e1",
+              "tertiary-fixed-dim": "#89ceff",
+              "surface-variant": "#353534",
+              "secondary": "#b7c8e1",
+              "surface-tint": "#ffb693",
+              "on-tertiary": "#00344d",
+              "primary-fixed-dim": "#ffb693",
+              "outline-variant": "#5a4136",
+              "secondary-container": "#3a4a5f",
+              "on-primary-fixed-variant": "#7a3000",
+              "on-secondary-container": "#a9bad3",
+              "on-tertiary-container": "#00354f",
+              "surface-container-low": "#1c1b1b",
+              "primary-container": "#ff6b00",
+              "tertiary-container": "#03a3e7",
+              "primary-fixed": "#ffdbcc",
+              "on-primary": "#561f00",
+              "inverse-primary": "#a04100",
+              "on-error-container": "#ffdad6",
+              "error": "#ffb4ab",
+              "background": "#131313",
+              "inverse-surface": "#e5e2e1",
+              "primary": "#ffb693",
+              "on-secondary-fixed": "#0b1c30",
+              "error-container": "#93000a",
+              "on-background": "#e5e2e1",
+              "surface-container-highest": "#353534",
+              "on-tertiary-fixed": "#001e2f",
+              "surface-container-lowest": "#0e0e0e",
+              "tertiary": "#89ceff",
+              "on-primary-fixed": "#351000",
+              "on-secondary": "#213145"
+            },
+            borderRadius: {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.5rem",
+              "full": "0.75rem"
+            },
+            spacing: {
+              "xs": "0.25rem",
+              "gutter": "16px",
+              "xl": "2rem",
+              "lg": "1.5rem",
+              "margin-desktop": "24px",
+              "sm": "0.5rem",
+              "margin-mobile": "16px",
+              "base": "4px",
+              "md": "1rem"
+            },
+            fontFamily: {
+              "sans": ["Geist", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            }
+          },
+        },
+      }
+    </script>
+    <link rel="stylesheet" href="app.css" />
+</head>
+<body class="bg-background text-on-surface font-sans industrial-grid custom-scrollbar overflow-x-hidden min-h-screen">
+
+    <!-- Global Toast Alert -->
+    <div class="fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300" id="toast">
+        <div class="bg-surface-container-high border border-outline-variant px-6 py-4 flex items-center gap-3 shadow-2xl">
+            <span class="material-symbols-outlined text-primary-container animate-pulse" id="toast-icon">info</span>
+            <div>
+                <p class="font-mono text-xs uppercase tracking-widest text-on-surface-variant" id="toast-title">SYSTEM STATUS</p>
+                <p class="font-semibold text-sm" id="toast-message">Message text</p>
+            </div>
+            <button class="text-on-surface-variant hover:text-primary pl-4" onclick="hideToast()">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- AUTHENTICATION GATEWAY VIEW                                               -->
+    <!-- ========================================================================= -->
+    <div class="min-h-screen grid grid-cols-1 lg:grid-cols-12 overflow-hidden" id="view-auth">
+        <!-- Left Banner Branding -->
+        <section class="hidden lg:flex lg:col-span-7 bg-surface-container-low relative flex-col justify-between p-12 industrial-grid border-r border-outline-variant">
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-12">
+                    <div class="w-10 h-10 bg-primary-container flex items-center justify-center rounded-none shadow-lg">
+                        <span class="font-mono text-on-primary-container font-black text-xl">F</span>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-2xl tracking-tighter text-on-surface">FABRICORE</h1>
+                        <p class="font-mono text-[9px] text-primary tracking-widest uppercase">Industrial SaaS Platform</p>
+                    </div>
+                </div>
+                <div class="space-y-6 max-w-xl">
+                    <h2 class="font-bold text-4xl leading-tight text-on-surface">Secure B2B Operations Platform for Modern Manufacturing</h2>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Seamlessly manage isolated tenant factories with absolute data security, high-precision inventory tracking, automated payroll, and audit-compliant expense approval workflows.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dashboard Mini Telemetry Preview -->
+            <div class="relative z-10 border border-outline-variant bg-surface/80 p-6 max-w-lg backdrop-blur-md">
+                <div class="flex justify-between items-center pb-4 border-b border-outline-variant mb-4">
+                    <span class="font-mono text-xs text-primary uppercase">Telemetry Grid - Unit 1</span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="font-mono text-[10px]">SYNC_ACTIVE</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-[10px] text-on-surface-variant uppercase">Roster</p>
+                        <p class="font-mono text-lg font-bold">142 STAFF</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-on-surface-variant uppercase">Monthly Cap</p>
+                        <p class="font-mono text-lg font-bold text-primary">₹4.2M</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-on-surface-variant uppercase">Line Out</p>
+                        <p class="font-mono text-lg font-bold text-emerald-500">98.4%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-0 right-0 w-full h-full pointer-events-none opacity-20 bg-cover bg-center grayscale" style="background-image: url('images/factory-bg.jpg');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+        </section>
+
+        <!-- Right Side Auth Panel -->
+        <section class="lg:col-span-5 bg-surface flex items-center justify-center p-8 relative">
+            <div class="w-full max-w-md space-y-8">
+                <div>
+                    <span class="font-mono text-xs text-primary tracking-widest uppercase">FACTORY LOGIN</span>
+                    <h2 class="text-3xl font-black text-on-surface mt-1">ENTRY GATEWAY</h2>
+                    <p class="text-sm text-on-surface-variant mt-2">Set up your factory workspace to get started</p>
+                </div>
+
+                <div class="border border-outline-variant bg-surface-container-low">
+                    <div class="flex border-b border-outline-variant bg-surface-container">
+                        <button class="flex-1 py-4 font-mono text-xs uppercase transition-colors text-primary border-b-2 border-primary bg-surface-container" id="tab-btn-signin" onclick="switchAuthTab('signin')">
+                            Sign In
+                        </button>
+                        <button class="flex-1 py-4 font-mono text-xs uppercase transition-colors text-on-surface-variant hover:bg-surface-container-high" id="tab-btn-register" onclick="switchAuthTab('register')">
+                            Register Tenant
+                        </button>
+                    </div>
+
+                    <div class="p-6">
+                        <!-- Sign In Form -->
+                        <form class="space-y-4" id="form-signin" onsubmit="handleAuthSubmit(event, 'signin')">
+                            <div class="space-y-1">
+                                <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Operator Username</label>
+                                <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="signin-username" placeholder="owner1" required="" type="text"/>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Access Password</label>
+                                <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="signin-password" placeholder="••••••••" required="" type="password"/>
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input class="w-4 h-4 bg-surface border-outline-variant text-primary focus:ring-primary-container" type="checkbox" id="auth-persist" checked/>
+                                    <span class="text-xs text-on-surface-variant hover:text-on-surface">Persist Session</span>
+                                </label>
+                                <button type="button" class="text-xs text-primary hover:underline" onclick="toggleMockModeHint()">Sandbox Simulator Mode</button>
+                            </div>
+                            <button class="w-full bg-primary text-background font-mono text-xs font-bold py-4 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-2 mt-4" type="submit">
+                                <span class="material-symbols-outlined text-sm">login</span>
+                                INITIALIZE PROTOCOLS
+                            </button>
+                        </form>
+
+                        <!-- Register Form -->
+                        <form class="space-y-4 hidden" id="form-register" onsubmit="handleAuthSubmit(event, 'register')">
+                            <div class="space-y-1">
+                                <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Company / Factory Unit Name</label>
+                                <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="reg-company" placeholder="Omega Factories" required="" type="text"/>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Owner Username</label>
+                                <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="reg-username" placeholder="owner1" required="" type="text"/>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Owner Email</label>
+                                    <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="reg-email" placeholder="owner@omega.com" required="" type="email"/>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Owner Password</label>
+                                    <input class="w-full bg-surface-container border border-outline-variant p-3 font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="reg-password" placeholder="••••••••" required="" type="password"/>
+                                </div>
+                            </div>
+                            <button class="w-full bg-primary text-background font-mono text-xs font-bold py-4 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-2 mt-4" type="submit">
+                                <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                                PROVISION TENANT MATRIX
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-[10px] text-on-surface-variant font-mono uppercase opacity-60">
+                    <p>VER 1.0.0 INDUSTRIAL ENGINE</p>
+                    <p>STATUS: UNLOCKED_STABLE</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- MAIN WORKSPACE CONTAINER                                                  -->
+    <!-- ========================================================================= -->
+    <div class="hidden flex min-h-screen" id="workspace">
+
+        <!-- Sidebar Layout Component -->
+        <aside class="fixed left-0 top-0 h-screen w-64 border-r border-outline-variant bg-surface flex flex-col z-40">
+            <!-- Brand Head -->
+            <div class="p-6 border-b border-outline-variant flex items-center justify-between">
+                <div>
+                    <h1 class="font-black text-xl tracking-tight text-on-surface">FABRICORE</h1>
+                    <p class="font-mono text-[9px] text-on-surface-variant uppercase tracking-widest">Manufacturing OS</p>
+                </div>
+                <div class="w-8 h-8 border border-primary bg-primary/10 flex items-center justify-center font-mono font-bold text-primary text-xs">U1</div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+                <a class="flex items-center gap-3 px-6 py-3 border-l-2 text-on-surface transition-colors" href="#dashboard" id="nav-dashboard">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="font-mono text-xs font-medium uppercase tracking-wider">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-6 py-3 border-l-2 text-on-surface transition-colors" href="#inventory" id="nav-inventory">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    <span class="font-mono text-xs font-medium uppercase tracking-wider">Inventory & Suppliers</span>
+                </a>
+                <a class="flex items-center gap-3 px-6 py-3 border-l-2 text-on-surface transition-colors" href="#workforce" id="nav-workforce">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-mono text-xs font-medium uppercase tracking-wider">Workforce & Shifts</span>
+                </a>
+                <a class="flex items-center gap-3 px-6 py-3 border-l-2 text-on-surface transition-colors" href="#payroll" id="nav-payroll">
+                    <span class="material-symbols-outlined">payments</span>
+                    <span class="font-mono text-xs font-medium uppercase tracking-wider">Loans & Payroll</span>
+                </a>
+                <a class="flex items-center gap-3 px-6 py-3 border-l-2 text-on-surface transition-colors" href="#expenses" id="nav-expenses">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    <span class="font-mono text-xs font-medium uppercase tracking-wider">Expenses Control</span>
+                </a>
+            </nav>
+
+            <!-- Mode Selector Dashboard / Bottom User Identity -->
+            <div class="p-4 border-t border-outline-variant space-y-3 bg-surface-container-low">
+                <div class="flex items-center justify-between bg-surface p-2 border border-outline-variant">
+                    <span class="font-mono text-[9px] text-on-surface-variant">SYNC SERVER ACTIVE</span>
+                    <!-- Sync Toggle Switch -->
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="sync-mode-toggle" class="sr-only peer" checked onchange="toggleSyncMode()">
+                        <div class="w-7 h-4 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface-variant after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary peer-checked:after:bg-background"></div>
+                    </label>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-surface p-2 border border-outline-variant">
+                    <div class="w-8 h-8 bg-primary-container flex items-center justify-center text-on-primary-container font-black text-xs">O</div>
+                    <div class="overflow-hidden">
+                        <p class="font-mono text-xs font-bold truncate text-on-surface" id="current-user-name">chief1</p>
+                        <p class="font-mono text-[9px] text-primary uppercase tracking-widest" id="current-user-role">OWNER ROLE</p>
+                    </div>
+                    <button class="ml-auto text-on-surface-variant hover:text-error transition-colors" onclick="logout()" title="Log out Node">
+                        <span class="material-symbols-outlined text-lg">logout</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Flow -->
+        <main class="ml-64 flex-1 flex flex-col min-h-screen overflow-hidden">
+            
+            <!-- Global Top Bar -->
+            <header class="h-16 border-b border-outline-variant bg-surface-container-low flex justify-between items-center px-6 sticky top-0 z-30">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500" id="sync-status-indicator" title="Local sandbox offline mode is active"></span>
+                    <h2 class="font-black font-mono text-sm tracking-widest text-on-surface uppercase" id="workspace-view-title">OPERATIONS CENTER</h2>
+                    <span class="text-xs text-on-surface-variant hidden lg:inline">/</span>
+                    <span class="text-xs font-mono text-on-surface-variant uppercase tracking-wider hidden lg:inline" id="tenant-display-name">TENANT: OMEGA INDUSTRIAL</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Global Month Selector -->
+                    <div class="flex items-center gap-2 bg-surface border border-outline-variant px-3 py-1.5 rounded">
+                        <span class="material-symbols-outlined text-sm text-primary">calendar_month</span>
+                        <select class="bg-transparent border-none p-0 text-xs font-mono font-bold focus:ring-0 focus:border-none text-on-surface cursor-pointer" id="global-month-select" onchange="handleMonthChange()">
+                            <option value="2026-05">MAY 2026</option>
+                            <option value="2026-06" selected>JUNE 2026</option>
+                            <option value="2026-07">JULY 2026</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions Panel -->
+                    <button class="bg-primary-container text-on-primary-container font-mono text-[10px] font-bold px-4 py-2 hover:opacity-90 transition-opacity border border-primary flex items-center gap-1.5 shadow-md" onclick="exportDataCSV()">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        EXPORT REPORT (CSV)
+                    </button>
+                </div>
+            </header>
+
+            <!-- ========================================================================= -->
+            <!-- SUB-VIEW: DASHBOARD (Default)                                             -->
+            <!-- ========================================================================= -->
+            <div class="p-6 space-y-6 flex-1 hidden" id="view-dashboard">
+                <!-- 4 Statistics Bento Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Staff Headcount -->
+                    <div class="bg-surface-container p-4 border border-outline-variant flex flex-col justify-between h-28 hover:border-primary/50 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Workforce Headcount</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">groups</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono text-3xl font-black text-on-surface" id="stat-headcount">0</span>
+                            <span class="text-xs text-primary font-mono" id="stat-headcount-trend">ACTIVE</span>
+                        </div>
+                    </div>
+                    <!-- Payroll Burn -->
+                    <div class="bg-surface-container p-4 border border-outline-variant flex flex-col justify-between h-28 hover:border-primary/50 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Payroll Release Draft</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">payments</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono text-3xl font-black text-on-surface" id="stat-payroll">₹0.00</span>
+                            <span class="text-xs text-on-surface-variant font-mono" id="stat-payroll-cap">DRAFT & PAID</span>
+                        </div>
+                    </div>
+                    <!-- Stock Alarms -->
+                    <div class="bg-surface-container p-4 border border-outline-variant flex flex-col justify-between h-28 hover:border-primary/50 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Low Stock SKUs</span>
+                            <span class="material-symbols-outlined text-error text-lg animate-pulse">warning</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono text-3xl font-black text-error" id="stat-alarms">0</span>
+                            <span class="text-xs text-error font-mono font-bold tracking-widest animate-pulse" id="stat-alarms-badge">OK</span>
+                        </div>
+                    </div>
+                    <!-- OpEx Monthly -->
+                    <div class="bg-surface-container p-4 border border-outline-variant flex flex-col justify-between h-28 hover:border-primary/50 transition-colors">
+                        <div class="flex justify-between items-start">
+                            <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">OpEx Consolidated</span>
+                            <span class="material-symbols-outlined text-on-surface-variant text-lg">receipt_long</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="font-mono text-3xl font-black text-on-surface" id="stat-opex">₹0.00</span>
+                            <span class="text-xs text-secondary font-mono" id="stat-opex-ratio">APPROVED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Layout Area: plant Output Chart + Alerts / Checklist -->
+                <div class="grid grid-cols-12 gap-6">
+                    
+                    <!-- Floor Checklist Card -->
+                    <div class="col-span-12 lg:col-span-7 bg-surface-container border border-outline-variant flex flex-col">
+                        <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-xl">fact_check</span>
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest">Operations Roster Checklist</h3>
+                            </div>
+                            <span class="font-mono text-[9px] text-on-surface-variant uppercase">Updated live</span>
+                        </div>
+                        <div class="p-6 space-y-4 flex-1">
+                            <div class="flex items-center gap-4 p-3 bg-surface hover:bg-surface-container-high border-l-2 border-primary transition-all">
+                                <input checked class="w-4 h-4 text-primary bg-surface border-outline-variant focus:ring-0 cursor-pointer" type="checkbox" onchange="toggleChecklistStrike(this)"/>
+                                <div class="flex-1">
+                                    <p class="font-mono text-xs font-bold line-through opacity-40">Review Material SKU Minimum Reorder Levels</p>
+                                    <p class="font-mono text-[9px] text-on-surface-variant">Procurement • Completed by Owner</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-3 bg-surface hover:bg-surface-container-high border-l-2 border-outline-variant transition-all">
+                                <input class="w-4 h-4 text-primary bg-surface border-outline-variant focus:ring-0 cursor-pointer" type="checkbox" onchange="toggleChecklistStrike(this)"/>
+                                <div class="flex-1">
+                                    <p class="font-mono text-xs font-bold">Punch Staff Clock-in Corrections</p>
+                                    <p class="font-mono text-[9px] text-on-surface-variant">Workforce • Supervisor Override needed</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-3 bg-surface hover:bg-surface-container-high border-l-2 border-outline-variant transition-all">
+                                <input class="w-4 h-4 text-primary bg-surface border-outline-variant focus:ring-0 cursor-pointer" type="checkbox" onchange="toggleChecklistStrike(this)"/>
+                                <div class="flex-1">
+                                    <p class="font-mono text-xs font-bold">Approve Pending Advance Salary Loan Requests</p>
+                                    <p class="font-mono text-[9px] text-on-surface-variant">Payroll Engine • Limit capped at 50% max</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Alerts Sidebar -->
+                    <div class="col-span-12 lg:col-span-5 bg-surface-container border border-outline-variant flex flex-col">
+                        <div class="px-6 py-4 border-b border-outline-variant bg-error-container/20 flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-error text-xl">warning</span>
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-error">Critical Stock Alarms</h3>
+                            </div>
+                            <span class="bg-error text-background text-[9px] font-bold px-2 py-0.5 uppercase" id="dashboard-critical-count">0 LOW</span>
+                        </div>
+                        <div class="p-6 space-y-3 flex-1 overflow-y-auto max-h-[300px] custom-scrollbar" id="dashboard-critical-list">
+                            <!-- Populated dynamically -->
+                            <p class="text-xs text-on-surface-variant text-center font-mono py-8">NO LOW STOCK DETECTED</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plant output bar telemetry charts -->
+                <div class="bg-surface-container border border-outline-variant p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest">Plant Output Telemetry</h3>
+                            <p class="text-xs text-on-surface-variant mt-1">Measured as active performance output across key nodes</p>
+                        </div>
+                        <div class="flex gap-4 font-mono text-[10px] uppercase">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 bg-primary"></div>
+                                <span>Output Actual</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 border border-outline-variant border-dashed"></div>
+                                <span>Projection Target</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Interactive CSS Bars -->
+                    <div class="h-40 flex items-end gap-2 border-b border-outline-variant px-4">
+                        <div class="flex-1 bg-primary/20 hover:bg-primary/40 border-t border-primary/50 transition-all relative group" style="height: 60%;">
+                            <div class="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">60%</div>
+                        </div>
+                        <div class="flex-1 bg-primary/30 hover:bg-primary/50 border-t border-primary/60 transition-all relative group" style="height: 72%;">
+                            <div class="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">72%</div>
+                        </div>
+                        <div class="flex-1 bg-primary/40 hover:bg-primary/60 border-t border-primary/70 transition-all relative group" style="height: 85%;">
+                            <div class="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">85%</div>
+                        </div>
+                        <div class="flex-1 bg-primary hover:brightness-110 border-t-2 border-primary transition-all relative group" style="height: 94%;">
+                            <div class="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[10px] opacity-0 group-hover:opacity-100 font-bold transition-opacity">94%</div>
+                        </div>
+                        <div class="flex-1 bg-primary/20 hover:bg-primary/40 border-t border-primary/50 transition-all relative group" style="height: 68%;"></div>
+                        <div class="flex-1 bg-primary/30 hover:bg-primary/50 border-t border-primary/60 transition-all relative group" style="height: 78%;"></div>
+                        <div class="flex-1 bg-primary/50 hover:bg-primary/70 border-t border-primary/80 transition-all relative group" style="height: 82%;"></div>
+                        <div class="flex-1 bg-primary hover:brightness-110 border-t-2 border-primary transition-all relative group" style="height: 90%;">
+                            <div class="absolute -top-7 left-1/2 -translate-x-1/2 font-mono text-[10px] opacity-0 group-hover:opacity-100 font-bold transition-opacity">90%</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-2 font-mono text-[9px] text-on-surface-variant uppercase tracking-widest">
+                        <span>Line A (Core)</span>
+                        <span>Line B (Processing)</span>
+                        <span>Line C (Assembling)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- SUB-VIEW: INVENTORY & SUPPLIERS                                           -->
+            <!-- ========================================================================= -->
+            <div class="p-6 space-y-6 flex-1 hidden" id="view-inventory">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Add Supplier / Add Material Panel -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Supplier Form -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Add Supplier</h3>
+                            <form class="space-y-3" id="form-supplier" onsubmit="submitSupplier(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Name</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="supp-name" placeholder="Steel Corp Inc." required type="text"/>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Contact Person</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="supp-contact" placeholder="John Doe" required type="text"/>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Phone</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="supp-phone" placeholder="+91987..." required type="text"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Email</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="supp-email" placeholder="john@corp.com" required type="email"/>
+                                    </div>
+                                </div>
+                                <button class="w-full bg-surface-container-high border border-primary text-primary font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary hover:text-background transition-all" type="submit">
+                                    SAVE SUPPLIER
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Raw Material Form -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Register SKU</h3>
+                            <form class="space-y-3" id="form-material" onsubmit="submitMaterial(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">SKU Reference</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="mat-sku" placeholder="STL-REBAR-12" required type="text"/>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Material Name</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="mat-name" placeholder="12mm Steel Rebar" required type="text"/>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Unit (Measure)</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="mat-unit" placeholder="TONS" required type="text"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Reorder Alert Level</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all" id="mat-reorder" placeholder="5.00" required step="0.01" type="number"/>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Supplier</label>
+                                    <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="mat-supplier">
+                                        <option value="">NO SUPPLIER ASSIGNED</option>
+                                    </select>
+                                </div>
+                                <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                    PROVISION SKU
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Material Catalog List & Ledger -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Catalog List Card -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high flex flex-wrap justify-between items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-xl">inventory_2</span>
+                                    <h3 class="font-bold font-mono text-xs uppercase tracking-widest">Active Raw Materials Ledger</h3>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <input type="text" id="inventory-search" placeholder="Search SKU/Name..." class="bg-surface border border-outline-variant text-xs font-mono px-3 py-1.5 text-on-surface focus:ring-primary focus:border-primary w-40" oninput="renderMaterialsTable()"/>
+                                    <button class="bg-surface border border-outline-variant text-[10px] font-mono px-3 py-1.5 text-on-surface-variant hover:text-primary" onclick="toggleLowStockFilter()" id="btn-lowstock-filter">
+                                        SHOW LOW STOCK
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">SKU</th>
+                                            <th class="p-3">Material Name</th>
+                                            <th class="p-3">Quantity</th>
+                                            <th class="p-3">Reorder Alert</th>
+                                            <th class="p-3">Supplier</th>
+                                            <th class="p-3 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="materials-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Stock Ledger Punch Entry (STOCK_IN / STOCK_OUT) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Stock movement entry card -->
+                            <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Punch Ledger Movement</h3>
+                                <form class="space-y-3" id="form-stock-punch" onsubmit="submitStockPunch(event)">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Material SKU</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="punch-mat-id" required>
+                                            <option value="">SELECT RAW MATERIAL</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Quantity (Decimal)</label>
+                                            <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="punch-qty" placeholder="10.50" required step="0.01" type="number"/>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Movement Type</label>
+                                            <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="punch-type" required>
+                                                <option value="STOCK_IN">STOCK_IN (+)</option>
+                                                <option value="STOCK_OUT">STOCK_OUT (-)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Operator / Punch Notes</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="punch-notes" placeholder="Batch load check-in" required type="text"/>
+                                    </div>
+                                    <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                        COMMIT MOVEMENT
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Transaction Audits Log Timeline -->
+                            <div class="bg-surface-container border border-outline-variant flex flex-col h-full">
+                                <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high flex justify-between items-center">
+                                    <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Audited Transaction History</h3>
+                                    <select class="bg-transparent border-none p-0 text-[10px] font-mono text-primary font-bold cursor-pointer focus:ring-0" id="timeline-filter-sku" onchange="loadTransactionLogs()">
+                                        <option value="">ALL MOVEMENTS</option>
+                                    </select>
+                                </div>
+                                <div class="p-6 space-y-4 flex-1 overflow-y-auto max-h-[220px] custom-scrollbar" id="transaction-logs-list">
+                                    <!-- Rendered dynamically -->
+                                    <p class="text-xs text-on-surface-variant text-center font-mono py-8">NO MOVEMENTS LOGGED</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Suppliers Catalog View -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest">Active Industrial Suppliers</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Supplier Name</th>
+                                            <th class="p-3">Contact Representative</th>
+                                            <th class="p-3">Phone</th>
+                                            <th class="p-3">Email Vector</th>
+                                            <th class="p-3 text-right">Purge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="suppliers-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- SUB-VIEW: WORKFORCE & ROSTER                                             -->
+            <!-- ========================================================================= -->
+            <div class="p-6 space-y-6 flex-1 hidden" id="view-workforce">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Shift Admin & Employee Form Panels -->
+                    <div class="lg:col-span-1 space-y-6">
+                        
+                        <!-- Shift Administration -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Roster Shift Setup</h3>
+                            <form class="space-y-3" id="form-shift" onsubmit="submitShift(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Shift Name</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="shift-name" placeholder="Morning Shift" required type="text"/>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Start Time</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="shift-start" placeholder="08:00:00" value="08:00:00" required type="text"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">End Time</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="shift-end" placeholder="16:00:00" value="16:00:00" required type="text"/>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Grace Period (Minutes)</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="shift-grace" placeholder="15" value="15" required type="number"/>
+                                </div>
+                                <button class="w-full bg-surface-container-high border border-primary text-primary font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary hover:text-background transition-all" type="submit">
+                                    SAVE SHIFT RULE
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Onboard Employee Form -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Onboard Employee</h3>
+                            <form class="space-y-3" id="form-employee" onsubmit="submitEmployee(event)">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">First Name</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="emp-firstname" placeholder="Alice" required type="text"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Last Name</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none focus:ring-1 focus:ring-primary" id="emp-lastname" placeholder="Smith" required type="text"/>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Email</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-email" placeholder="alice@mfg.com" required type="email"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Phone</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-phone" placeholder="987654..." required type="text"/>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Salary Model</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-salmodel" required>
+                                            <option value="FIXED">FIXED (MONTHLY)</option>
+                                            <option value="DAILY">DAILY WAGE</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Base Salary Rate</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-basesalary" placeholder="1200" required type="number"/>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Roster Role</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-role" required>
+                                            <option value="OPERATOR">OPERATOR</option>
+                                            <option value="SUPERVISOR">SUPERVISOR</option>
+                                            <option value="HELPER">HELPER</option>
+                                            <option value="CLERK">CLERK</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Department</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-dept" required>
+                                            <option value="PRODUCTION">PRODUCTION</option>
+                                            <option value="ASSEMBLY">ASSEMBLY</option>
+                                            <option value="LOGISTICS">LOGISTICS</option>
+                                            <option value="QUALITY_CONTROL">QUALITY CONTROL</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Shift Assignment</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-shift" required>
+                                            <option value="">SELECT ACTIVE SHIFT</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Joining Date</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="emp-joiningdate" required type="date"/>
+                                    </div>
+                                </div>
+                                <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                    PROVISION EMPLOYEE
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- Employee List & Attendance Punch Controls -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Roster Roster Card -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Active Factory Workforce Roster</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Name</th>
+                                            <th class="p-3">Contact</th>
+                                            <th class="p-3">Shift</th>
+                                            <th class="p-3">Salary Model</th>
+                                            <th class="p-3">Rate</th>
+                                            <th class="p-3 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employees-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Active Shifts Rules Grid -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest">Active Operations Timetables</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Shift Name</th>
+                                            <th class="p-3">Start Bounds</th>
+                                            <th class="p-3">End Bounds</th>
+                                            <th class="p-3">Grace (Mins)</th>
+                                            <th class="p-3 text-right">Purge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="shifts-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Daily Clock-In attendance punches -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Attendance Punch Entry -->
+                            <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Punch Attendance Check</h3>
+                                <form class="space-y-3" id="form-attendance" onsubmit="submitAttendancePunch(event)">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Roster Employee</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="att-emp-id" required onchange="handleAttEmployeeChange()">
+                                            <option value="">SELECT STAFF MEMBER</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Shift Rule</label>
+                                            <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="att-shift-id" required>
+                                                <option value="">SELECT SHIFT</option>
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Action Punch</label>
+                                            <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="att-type" required>
+                                                <option value="CHECK_IN">CHECK_IN</option>
+                                                <option value="CHECK_OUT">CHECK_OUT</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Punch Timestamp (ISO Format)</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="att-time-stamp" placeholder="2026-06-01T08:05:00" required type="text"/>
+                                    </div>
+                                    <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                        COMMIT ATTENDANCE PUNCH
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Supervisor Corrections & Manual Override -->
+                            <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-error">Supervisor Correction Override</h3>
+                                <form class="space-y-3" id="form-correction" onsubmit="submitCorrectionOverride(event)">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Punch Log ID</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="corr-punch-id" required>
+                                            <option value="">SELECT LOG EVENT</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Correct In Time</label>
+                                            <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="corr-in" placeholder="2026-06-01T08:00:00" required type="text"/>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Correct Out Time</label>
+                                            <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="corr-out" placeholder="2026-06-01T16:00:00" required type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Correction Status</label>
+                                            <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="corr-status" required>
+                                                <option value="PRESENT">PRESENT</option>
+                                                <option value="LATE">LATE</option>
+                                                <option value="HALF_DAY">HALF DAY</option>
+                                                <option value="ABSENT">ABSENT</option>
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label class="font-mono text-[9px] text-on-surface-variant uppercase">Override Audit Reason</label>
+                                            <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="corr-notes" placeholder="Forgot card swipe" required type="text"/>
+                                        </div>
+                                    </div>
+                                    <button class="w-full bg-surface-container-high border border-error text-error font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-error hover:text-background transition-all" type="submit">
+                                        LOG OVERRIDE AUDIT
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <!-- Headcount Attendance Logs Table -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Recent Headcount Logs & Corrections</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Employee</th>
+                                            <th class="p-3">Check-In</th>
+                                            <th class="p-3">Check-Out</th>
+                                            <th class="p-3">Hours</th>
+                                            <th class="p-3">Late Alert</th>
+                                            <th class="p-3">Audit Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendance-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- SUB-VIEW: LOANS & PAYROLL                                                 -->
+            <!-- ========================================================================= -->
+            <div class="p-6 space-y-6 flex-1 hidden" id="view-payroll">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Advance Loans Issuing Panel -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Issue Salary Advance Loan</h3>
+                            <form class="space-y-3" id="form-advance" onsubmit="submitAdvanceLoan(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Borrower Staff</label>
+                                    <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface focus:outline-none" id="adv-emp-id" required>
+                                        <option value="">SELECT ROSTER EMPLOYEE</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Amount (INR)</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="adv-amount" placeholder="15000.00" required type="number"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Repayment Month</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="adv-month" placeholder="2026-06" value="2026-06" required type="text"/>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Medical/Emergency Reason</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface font-mono" id="adv-reason" placeholder="Family medical support" required type="text"/>
+                                </div>
+                                <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                    ISSUE CASH LOAN
+                                </button>
+                                <p class="font-mono text-[9px] text-on-surface-variant text-center uppercase border-t border-outline-variant/40 pt-2">MAXIMUM BORROW CAP EXPORTS TO 50% BASE RATE</p>
+                            </form>
+                        </div>
+
+                        <!-- Calculate/Processor Payroll Trigger Box -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Payroll Arithmetic Engine</h3>
+                            <form class="space-y-3" id="form-payroll-calc" onsubmit="calculatePayroll(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Roster Target</label>
+                                    <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="pay-emp-id" required>
+                                        <option value="">SELECT ROSTER EMPLOYEE</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Target Pay Cycle Month</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="pay-month" placeholder="2026-06" value="2026-06" required type="text"/>
+                                </div>
+                                <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-2" type="submit">
+                                    <span class="material-symbols-outlined text-sm">sync</span>
+                                    RUN PAYROLL PROCESSOR
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Advance Loans Catalog & Draft Payroll Ledger -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Advance Loans Approval Pipeline -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Active Staff Loans Ledger</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Borrower Employee</th>
+                                            <th class="p-3">Amount</th>
+                                            <th class="p-3">Target Month</th>
+                                            <th class="p-3">Emergency Vector</th>
+                                            <th class="p-3">Status</th>
+                                            <th class="p-3 text-right">Supervisor Approve</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="advances-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Processed payroll spreadsheet -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high">
+                                <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Processed Draft & Approved Payroll Sheets</h3>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Staff Name</th>
+                                            <th class="p-3">Pay Month</th>
+                                            <th class="p-3">Base Wages</th>
+                                            <th class="p-3">Absence Deduct</th>
+                                            <th class="p-3">Advance Paybacks</th>
+                                            <th class="p-3">Net payout</th>
+                                            <th class="p-3">State</th>
+                                            <th class="p-3 text-right">Disbursal Protocols</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payrolls-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- SUB-VIEW: EXPENSES CONTROL                                                -->
+            <!-- ========================================================================= -->
+            <div class="p-6 space-y-6 flex-1 hidden" id="view-expenses">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Expense Submission Card -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2 text-primary">Log Operations Expense</h3>
+                            <form class="space-y-3" id="form-expense" onsubmit="submitExpense(event)">
+                                <div class="space-y-1">
+                                    <label class="font-mono text-[9px] text-on-surface-variant uppercase">Expenditure Description</label>
+                                    <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="exp-desc" placeholder="High-voltage line utility bill" required type="text"/>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Amount (INR)</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="exp-amount" placeholder="8450" required type="number"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Category Type</label>
+                                        <select class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="exp-cat" required>
+                                            <option value="UTILITIES">UTILITIES</option>
+                                            <option value="MAINTENANCE">MAINTENANCE</option>
+                                            <option value="TRANSPORT">TRANSPORT</option>
+                                            <option value="MISC">MISC</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Department</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="exp-dept" placeholder="Processing" required type="text"/>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="font-mono text-[9px] text-on-surface-variant uppercase">Project Node</label>
+                                        <input class="w-full bg-surface border border-outline-variant p-2 font-mono text-xs text-on-surface" id="exp-proj" placeholder="Phase 2 Core" required type="text"/>
+                                    </div>
+                                </div>
+                                <button class="w-full bg-primary text-background font-mono text-xs font-bold py-2.5 uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" type="submit">
+                                    COMMIT OPERATIONAL EXPENSE
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Category/Dept Summaries charts -->
+                        <div class="bg-surface-container border border-outline-variant p-6 space-y-4">
+                            <h3 class="font-bold font-mono text-xs uppercase tracking-widest border-b border-outline-variant pb-2">Expense Allocation Summary</h3>
+                            <div class="space-y-3 font-mono text-xs" id="expenses-allocation-list">
+                                <!-- Allocation rows -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Pipeline Tracker Spreadsheet -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Pipeline list -->
+                        <div class="bg-surface-container border border-outline-variant flex flex-col">
+                            <div class="px-6 py-4 border-b border-outline-variant bg-surface-container-high flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-xl">receipt_long</span>
+                                    <h3 class="font-bold font-mono text-xs uppercase tracking-widest text-on-surface">Factory Expense Control Pipeline</h3>
+                                </div>
+                                <span class="font-mono text-[9px] text-on-surface-variant uppercase tracking-widest">SUBMITTED → APPROVED → COMPLETED</span>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full border-collapse font-mono text-xs">
+                                    <thead>
+                                        <tr class="bg-surface text-left border-b border-outline-variant text-[10px] text-on-surface-variant uppercase">
+                                            <th class="p-3">Reference Description</th>
+                                            <th class="p-3">Burn Cost</th>
+                                            <th class="p-3">Allocation</th>
+                                            <th class="p-3">Department/Node</th>
+                                            <th class="p-3">Flow State</th>
+                                            <th class="p-3 text-right">Approval Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expenses-table-body">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Footer System Status -->
+            <footer class="h-8 bg-surface-container-lowest border-t border-outline-variant px-6 flex items-center justify-between sticky bottom-0 z-30">
+                <div class="flex items-center gap-4 font-mono text-[9px] text-on-surface-variant">
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span>SYSTEM: STABLE_ACTIVE</span>
+                    </div>
+                    <span>|</span>
+                    <span>REST INTERFACES: CONNECTED</span>
+                </div>
+                <span class="font-mono text-[9px] text-on-surface-variant uppercase tracking-wider">FABRICORE ENTERPRISE v1.0.0 NODE</span>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- JAVASCRIPT WORKSPACE INTERFACES ENGINE                                    -->
+    <!-- ========================================================================= -->
+    <!-- Load CSV Helper first -->
+    <script src="js/csv-helper.js"></script>
+    
+    <!-- Load Core Framework second -->
+    <script src="js/app.js"></script>
+    
+    <!-- Load View-Specific modules -->
+    <script src="js/inventory.js"></script>
+    <script src="js/workforce.js"></script>
+    <script src="js/payroll.js"></script>
+    <script src="js/expenses.js"></script>
+</body>
+</html>
